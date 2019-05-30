@@ -99,6 +99,26 @@ public class Query {
         return createStatement(query);
     }
 
+    public Ticket getTicket(String digest) throws  SQLException{
+        String query;
+        Ticket ticket = null;
+
+        query = "SELECT * FROM TICKET WHERE DIGEST = '"+digest+"'";
+        stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(query);
+
+        while (rs.next()){
+            String type = rs.getString(2);
+            int pax = Integer.parseInt(rs.getString(3));
+            String _digest = rs.getString(4);
+            String serial = rs.getString(5);
+            int owner = Integer.parseInt(rs.getString(6));
+            int event = Integer.parseInt(rs.getString(7));
+            ticket = new Ticket(type,pax,digest,serial,owner,event);
+        }
+        return ticket;
+    }
+
     private boolean createStatement(String query) throws SQLException {
         stmt = conn.createStatement();
         if (stmt.executeUpdate(query) == 1) {
