@@ -46,6 +46,15 @@ public class Query {
 
     }
 
+    public boolean createTicket(Ticket _ticket){
+        Ticket ticket = _ticket;
+        String query;
+        query = "INSERT INTO TICKET (TicketID,TicketType,Pax,Digest,Serial,UserID,EventID) VALUES(";
+        query += "DEFAULT,'"+ticket.type+"',"+ticket.pax+",'"+ticket.digest+"','"+ticket.serial+"',"+ticket.owner+","+ticket.event+")";
+        System.out.println(query);
+        return createStatement(query);
+    }
+
     private boolean createStatement(String query){
         try{
             stmt = conn.createStatement();
