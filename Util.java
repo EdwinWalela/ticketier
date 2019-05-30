@@ -74,7 +74,7 @@ public class Util {
         ImageIO.write(image, "PNG", new File("ticket.png"));
     }
 
-    public static String readQRCode(String filepath) throws FileNotFoundException,IOException,NotFoundException {
+    public static String readQRCode(String filepath) throws IOException,NotFoundException {
         BinaryBitmap binaryBitmap = new BinaryBitmap(
                 new HybridBinarizer(
                         new BufferedImageLuminanceSource(

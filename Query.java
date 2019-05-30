@@ -1,10 +1,8 @@
 package com.company;
 
 import java.security.NoSuchAlgorithmException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.ArrayList;
 
 public class Query {
     Connection conn;
@@ -14,7 +12,7 @@ public class Query {
         conn = newConn;
     }
 
-    public boolean createUser(User _newUser) throws NoSuchAlgorithmException {
+    public boolean createUser(User _newUser) throws NoSuchAlgorithmException,SQLException {
         User user = _newUser;
         String query;
         query = "INSERT INTO USERS (UserID,UserName,Password,Email,Type) VALUES(";
@@ -36,7 +34,7 @@ public class Query {
         return plainHash.equals(dbHash);
     }
 
-    public boolean createEvent(Event _event){
+    public boolean createEvent(Event _event) throws SQLException{
         Event event = _event;
         String query;
         query = "INSERT INTO EVENT (EventID,UserID,EventName,Venue,Description,Date,MaxSale) VALUES(";
@@ -46,7 +44,30 @@ public class Query {
 
     }
 
-    public boolean createTicket(Ticket _ticket){
+    public Event[] getEvents() throws SQLException{
+        ArrayList<Event> events = new ArrayList<Event>();
+        String query = "SELECT * FROM EVENT";
+        stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(query);
+        while (rs.next()){
+            int eventID,userID,maxSale;
+            String venue,desc,name;
+            Date date;
+
+            userID = Integer.parseInt(rs.getString(2));
+            name = rs.getString(3);
+            venue = rs.getString(4);
+            desc = rs.getString(5);
+            date = Date.valueOf(rs.getString(6));
+            maxSale = Integer.parseInt(rs.getString(7));
+
+            Event event = new Event(userID,name,venue,desc,date,maxSale);
+            events.add(event);
+        }
+        return events.toArray(new Event[]{});
+    }
+
+    public boolean createTicket(Ticket _ticket) throws SQLException{
         Ticket ticket = _ticket;
         String query;
         query = "INSERT INTO TICKET (TicketID,TicketType,Pax,Digest,Serial,UserID,EventID) VALUES(";
@@ -55,19 +76,17 @@ public class Query {
         return createStatement(query);
     }
 
-    private boolean createStatement(String query){
-        try{
-            stmt = conn.createStatement();
-            if(stmt.executeUpdate(query) == 1){
-                return true;
-            }
+    private boolean createStatement(String query) throws SQLException {
+        stmt = conn.createStatement();
+        if (stmt.executeUpdate(query) == 1) {
             stmt.close();
-
-        }catch(SQLException e){
-            System.out.println(e.getMessage());
-
+            return true;
+        } else {
+            stmt.close();
+            return false;
         }
-        return  false;
     }
+
+
 
 }
