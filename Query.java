@@ -67,6 +67,29 @@ public class Query {
         return events.toArray(new Event[]{});
     }
 
+    public Event getEvent(int id) throws SQLException{
+        Event event = null;
+        String query = "SELECT * FROM EVENT WHERE EVENTID = "+id;
+        stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(query);
+
+        while(rs.next()){
+            int userID,maxSale;
+            String venue,desc,name;
+            Date date;
+
+            userID = Integer.parseInt(rs.getString(2));
+            name = rs.getString(3);
+            venue = rs.getString(4);
+            desc = rs.getString(5);
+            date = Date.valueOf(rs.getString(6));
+            maxSale = Integer.parseInt(rs.getString(7));
+
+            event = new Event(userID,name,venue,desc,date,maxSale);
+        }
+        return event;
+    }
+
     public boolean createTicket(Ticket _ticket) throws SQLException{
         Ticket ticket = _ticket;
         String query;
