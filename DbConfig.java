@@ -9,7 +9,7 @@ public class DbConfig {
     {
 
         // Connection configuration
-        String DB_URL ="jdbc:mysql://localhost/tickets";
+        String DB_URL ="jdbc:mysql://localhost/ticketing";
         String USER = "root";
         String PASS = "";
         Connection conn = null;
