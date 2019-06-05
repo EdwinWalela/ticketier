@@ -1,4 +1,4 @@
-# Ticketier
+# Ticketier API
 Producing cryptograhically secured tickets. 
 
 ## Depandancies (libraries)
