@@ -94,7 +94,7 @@ public class Query {
         Ticket ticket = _ticket;
         String query;
         query = "INSERT INTO TICKET (TicketID,TicketType,Pax,Digest,Serial,UserID,EventID) VALUES(";
-        query += "DEFAULT,'"+ticket.type+"',"+ticket.pax+",'"+ticket.digest+"','"+ticket.serial+"',"+ticket.owner+","+ticket.event+")";
+        query += "DEFAULT,'"+ticket.type+"',"+ticket.pax+",'"+ticket.digest+"','"+ticket.serial+"',"+ticket.owner+","+ticket.eventId+")";
         System.out.println(query);
         return createStatement(query);
     }
@@ -114,7 +114,7 @@ public class Query {
             String serial = rs.getString(5);
             int owner = Integer.parseInt(rs.getString(6));
             int event = Integer.parseInt(rs.getString(7));
-            ticket = new Ticket(type,pax,digest,serial,owner,event);
+            ticket = new Ticket(type,pax,digest,serial,owner,event,"");
         }
         return ticket;
     }

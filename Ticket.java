@@ -6,14 +6,16 @@ public class Ticket {
     public String digest;
     public String serial;
     public int owner;
-    public int event;
+    public int eventId;
+    public String eventName;
 
-    public Ticket(String _type,int _pax,String _digest,String _serial,int _owner,int _event){
+    public Ticket(String _type,int _pax,String _digest,String _serial,int _owner,int _event,String _name){
         type = _type;
         pax = _pax;
         digest = _digest;
         serial = _serial;
         owner = _owner;
-        event = _event;
+        eventId = _event;
+        eventName = _name;
     }
 }
