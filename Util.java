@@ -11,10 +11,15 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import javax.imageio.ImageIO;
+import javax.mail.*;
+import javax.mail.internet.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,6 +27,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.util.Properties;
 
 public class Util {
 
@@ -100,4 +106,60 @@ public class Util {
         return sb.toString();
     }
 
+    public static void sendMail(EmailBody body) throws MessagingException{
+        final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
+        String to = body.To;
+        String from = "ticketier.info@gmail.com";
+        String pass = "vitz2020";
+
+        // Get a Properties object
+        Properties props = System.getProperties();
+        props.setProperty("mail.smtp.host", "smtp.gmail.com");
+        props.setProperty("mail.smtp.socketFactory.class", SSL_FACTORY);
+        props.setProperty("mail.smtp.socketFactory.fallback", "false");
+        props.setProperty("mail.smtp.port", "465");
+        props.setProperty("mail.smtp.socketFactory.port", "465");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.debug", "true");
+        props.put("mail.store.protocol", "pop3");
+        props.put("mail.transport.protocol", "smtp");
+            Session session = Session.getDefaultInstance(props,
+                    new Authenticator(){
+                        protected PasswordAuthentication getPasswordAuthentication() {
+                            return new PasswordAuthentication(from, pass);
+                        }});
+
+            // -- Create a new message --
+            Message msg = new MimeMessage(session);
+            msg.setSubject(body.subject);
+            // -- Set the FROM and TO fields --
+            msg.setFrom(new InternetAddress(from));
+            msg.setRecipients(Message.RecipientType.TO,
+                    InternetAddress.parse(to,false));
+            MimeMultipart multipart = new MimeMultipart();
+
+            BodyPart messageBodyPart = new MimeBodyPart();
+            String htmlText = "<center><h1>Thank your for purchasing your ticket using Ticketier</h1>";
+            htmlText += "<br/><br/><strong><h3>Event details</h3></strong><br/>";
+            htmlText += "Event: "+body.ticket.eventName+"<br/>";
+            htmlText += "Admits: "+body.ticket.pax+"<br/>";
+            htmlText += "</center>";
+            htmlText += "<br/><img src=\"cid:image\">";
+            htmlText += "<em>This ticket has been automatically generated and can only be used once after which it will be no longer valid.</em>";
+            htmlText += "<br/><br/><br/> <center>Ticketier ©2019<center/>";
+            messageBodyPart.setContent(htmlText,"text/html");
+            multipart.addBodyPart(messageBodyPart);
+
+            messageBodyPart = new MimeBodyPart();
+            String ticketType = body.ticket.type;
+            DataSource fds = new FileDataSource("./tickets/"+ticketType+"-ticket.png");
+            messageBodyPart.setDataHandler(new DataHandler(fds));
+            messageBodyPart.setHeader("Content-ID","<image>");
+
+            multipart.addBodyPart(messageBodyPart);
+            msg.setContent(multipart);
+
+            Transport.send(msg);
+            System.out.println("Message sent.");
+    }
 }
