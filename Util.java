@@ -140,11 +140,11 @@ public class Util {
 
             BodyPart messageBodyPart = new MimeBodyPart();
             String htmlText = "<center><h1>Thank your for purchasing your ticket using Ticketier</h1>";
-            htmlText += "<br/><br/><strong><h3>Event details</h3></strong><br/>";
+            htmlText += "<br/><strong><h3 style='text-decoration:underline'>Event details</h3></strong>";
             htmlText += "Event: "+body.ticket.eventName+"<br/>";
             htmlText += "Admits: "+body.ticket.pax+"<br/>";
             htmlText += "</center>";
-            htmlText += "<br/><img src=\"cid:image\">";
+            htmlText += "<img src=\"cid:image\">";
             htmlText += "<em>This ticket has been automatically generated and can only be used once after which it will be no longer valid.</em>";
             htmlText += "<br/><br/><br/> <center>Ticketier ©2019<center/>";
             messageBodyPart.setContent(htmlText,"text/html");
