@@ -13,6 +13,7 @@ Producing cryptograhically secured tickets.
 3. Event
 4. Ticket
 5. User
+6. EmailBody
 
 ## 1. Query
 Handles all database queries. Constructor expects a connection object
@@ -92,5 +93,10 @@ Takes a photo from the webcam and saves the image as `ticket.png` in the current
 #### SHA-256 Hash function
 ```java
 public static String sha256(String) throws NoSuchAlgorithmException
+```
+
+#### Send Email
+```java
+public static void sendMail(EmailBody) throws Exception
 ```
 
